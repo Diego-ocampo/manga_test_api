@@ -1,6 +1,5 @@
 # Visual Studio
 .vs/
-*.vcxproj.user
 *.suo
 *.user
 *.userosscache
@@ -12,101 +11,52 @@
 out/
 build/
 
-# Rider
+# IDE
 .idea/
-*.sln.iml
-
-# Visual Studio Code
 .vscode/
+*.sln.iml
+_ReSharper*/
+*.DotSettings.user
 
 # NuGet
 *.nupkg
-# The packages folder can be ignored because of PackageReference
 packages/
-.project.json
-project.lock.json
-
-# ASP.NET Scaffolding
-ScaffoldingReadMe.txt
-
-# DotNet CLI
 project.assets.json
-.assets/
 .nuget/
 
-# MSBuild logs
+# Logs and temp
 *.log
 *.binlog
+*.cache
+*.tmp
+*.temp
+logs/
 
-# Test results
+# Test and coverage
 TestResults/
 *.trx
-
-# Coverage & profiling
 coverage/
 *.coverage
-*.coveragexml
-*.prof
 
-# Database files
+# Database
 *.mdf
 *.ldf
 *.sqlite
 *.db
 
-# User-specific and temporary files
-*.swp
-*~
-.pdb
-*.cache
-*.log
-*.tmp
-*.temp
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Rider / ReSharper
-_ReSharper*/
-*.DotSettings.user
-
-# Entity Framework
-ef_migrations/
-*.efcore
-
 # Secrets
 secrets.json
 secrets.*.json
-# If using user secrets via dotnet user-secrets, they are stored outside the repo by default,
-# but include common patterns just in case
 *.usersecrets
 
-# Docker
-docker-compose.override.yml
-docker-compose.*.yml
+# OS
+.DS_Store
+Thumbs.db
 
-# Visual Studio debugger
-.vsdbg/
-.vsdbgsrc/
-
-# JetBrains Rider caches
-.idea/
-
-# Node/npm (if present in repo)
-node_modules/
-
-# Logs produced by CI or local tools
-logs/
-*.log
-
-# Package manager directories
-packages/
-
-# Ignore compiled asset files
+# Compiled output
 *.dll
 *.exe
+*.pdb
 
-# Optional: add any local IDE or tool folders you use
-# Example: local tooling temp folder seen in your IDESTATE
-Temp/
+# Node (if added later)
+node_modules/
