@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace MangaT.API.Controllers
 {
@@ -10,7 +11,8 @@ namespace MangaT.API.Controllers
         [Route("api/v1/popular")]
         public IEnumerable<Manga> Get()
         {
-            var popularManga = new List<Manga>
+            var popularManga = new List<Manga>         
+           
             {
                 new Manga
                 {
@@ -69,7 +71,7 @@ namespace MangaT.API.Controllers
                 }
             };
 
-            return popularManga;
+            return popularManga.OrderBy(m => m.Point);
         }
 
 

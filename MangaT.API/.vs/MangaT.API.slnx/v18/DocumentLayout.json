@@ -1,18 +1,18 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Practicas\\manga_test_api\\MangaT.API\\",
+  "WorkspaceRootPath": "C:\\Proyectos\\manga_test_api\\MangaT.API\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C2603E84-8EB1-478A-2717-5334BE2CEE27}|MangaT.API.csproj|c:\\practicas\\manga_test_api\\mangat.api\\controllers\\mangacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C2603E84-8EB1-478A-2717-5334BE2CEE27}|MangaT.API.csproj|solutionrelative:controllers\\mangacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C2603E84-8EB1-478A-2717-5334BE2CEE27}|MangaT.API.csproj|c:\\practicas\\manga_test_api\\mangat.api\\mangat.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "AbsoluteMoniker": "D:0:0:{C2603E84-8EB1-478A-2717-5334BE2CEE27}|MangaT.API.csproj|c:\\proyectos\\manga_test_api\\mangat.api\\mangat.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
       "RelativeMoniker": "D:0:0:{C2603E84-8EB1-478A-2717-5334BE2CEE27}|MangaT.API.csproj|solutionrelative:mangat.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C2603E84-8EB1-478A-2717-5334BE2CEE27}|MangaT.API.csproj|c:\\practicas\\manga_test_api\\mangat.api\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{C2603E84-8EB1-478A-2717-5334BE2CEE27}|MangaT.API.csproj|c:\\proyectos\\manga_test_api\\mangat.api\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C2603E84-8EB1-478A-2717-5334BE2CEE27}|MangaT.API.csproj|solutionrelative:controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C2603E84-8EB1-478A-2717-5334BE2CEE27}|MangaT.API.csproj|c:\\proyectos\\manga_test_api\\mangat.api\\controllers\\mangacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C2603E84-8EB1-478A-2717-5334BE2CEE27}|MangaT.API.csproj|solutionrelative:controllers\\mangacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -42,39 +42,39 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "MangaController.cs",
-              "DocumentMoniker": "C:\\Practicas\\manga_test_api\\MangaT.API\\Controllers\\MangaController.cs",
+              "DocumentMoniker": "C:\\Proyectos\\manga_test_api\\MangaT.API\\Controllers\\MangaController.cs",
               "RelativeDocumentMoniker": "Controllers\\MangaController.cs",
-              "ToolTip": "C:\\Practicas\\manga_test_api\\MangaT.API\\Controllers\\MangaController.cs",
+              "ToolTip": "C:\\Proyectos\\manga_test_api\\MangaT.API\\Controllers\\MangaController.cs",
               "RelativeToolTip": "Controllers\\MangaController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAZAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-05-27T02:38:02.905Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "WeatherForecastController.cs",
-              "DocumentMoniker": "C:\\Practicas\\manga_test_api\\MangaT.API\\Controllers\\WeatherForecastController.cs",
+              "DocumentMoniker": "C:\\Proyectos\\manga_test_api\\MangaT.API\\Controllers\\WeatherForecastController.cs",
               "RelativeDocumentMoniker": "Controllers\\WeatherForecastController.cs",
-              "ToolTip": "C:\\Practicas\\manga_test_api\\MangaT.API\\Controllers\\WeatherForecastController.cs",
+              "ToolTip": "C:\\Proyectos\\manga_test_api\\MangaT.API\\Controllers\\WeatherForecastController.cs",
               "RelativeToolTip": "Controllers\\WeatherForecastController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAArAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA0AAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-05-27T02:28:59.066Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "MangaT.API.http",
-              "DocumentMoniker": "C:\\Practicas\\manga_test_api\\MangaT.API\\MangaT.API.http",
+              "DocumentMoniker": "C:\\Proyectos\\manga_test_api\\MangaT.API\\MangaT.API.http",
               "RelativeDocumentMoniker": "MangaT.API.http",
-              "ToolTip": "C:\\Practicas\\manga_test_api\\MangaT.API\\MangaT.API.http",
+              "ToolTip": "C:\\Proyectos\\manga_test_api\\MangaT.API\\MangaT.API.http",
               "RelativeToolTip": "MangaT.API.http",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAzAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
               "WhenOpened": "2026-05-27T02:27:55.411Z",
               "EditorCaption": ""
