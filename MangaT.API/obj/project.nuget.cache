@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "IL84DmRGGxQ=",
+  "success": true,
+  "projectFilePath": "C:\\Proyectos\\manga_test_api\\MangaT.API\\MangaT.API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Diego\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.5\\microsoft.aspnetcore.openapi.10.0.5.nupkg.sha512",
+    "C:\\Users\\Diego\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
