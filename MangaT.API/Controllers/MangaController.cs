@@ -70,7 +70,8 @@ public class MangaController : ControllerBase
                 DetailUrl = new Uri("https://example.com/myheroacademia")
             }
         };
-
-            return popularManga.OrderBy(m => m.Point);
+        
+        var list = popularManga.OrderByDescending(m => m.Point).ToList();
+        return Ok(list);
     }
 }
