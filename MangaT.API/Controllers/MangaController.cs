@@ -9,9 +9,9 @@ namespace MangaT.API.Controllers;
 public class MangaController : ControllerBase
 {
     [HttpGet("popular")]
-    public ActionResult<IEnumerable<Manga>> GetPopular()
+    public ActionResult<IEnumerable<MangaDto>> GetPopular()
     {
-        var popularManga = new List<Manga>
+        var popularManga = new List<MangaDto>
            
         {
             new()

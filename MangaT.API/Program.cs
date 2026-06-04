@@ -1,7 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+using MangaT.API.Infrastructure.Persistence;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+
+// Registrar DbContext usando la cadena de conexión "DefaultConnection"
+builder.Services.AddDbContext<MangaDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 

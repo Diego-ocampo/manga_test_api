@@ -1,6 +1,6 @@
 namespace MangaT.API.Models;
 
-public class Manga
+public class MangaDto
 {
     public required string Title { get; set; }
     public required string Author { get; set; }
@@ -10,4 +10,5 @@ public class Manga
     public double Point { get; set; }
     public required Uri ImageUrl { get; set; }
     public required Uri DetailUrl { get; set; }
+    public string TitleWithAuthor => $"{Title} by {Author}";
 }
