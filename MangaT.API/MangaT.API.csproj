@@ -8,11 +8,15 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Infrastructure\Seed\" />
+    <ProjectReference Include="..\MangaT.ApplicationCore\MangaT.ApplicationCore.csproj" />
+    <ProjectReference Include="..\MangaT.Infrastructure\MangaT.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

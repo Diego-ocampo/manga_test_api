@@ -1,4 +1,4 @@
-namespace MangaT.API.Models;
+namespace MangaT.ApplicationCore.DTOs;
 
 public class MangaDto
 {
