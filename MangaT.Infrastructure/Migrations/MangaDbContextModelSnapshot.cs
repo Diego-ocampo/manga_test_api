@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace MangaT.Infrastructure.Persistence.Migrations
+namespace MangaT.Infrastructure.Migrations
 {
     [DbContext(typeof(MangaDbContext))]
     partial class MangaDbContextModelSnapshot : ModelSnapshot

@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace MangaT.Infrastructure.Persistence.Migrations
+namespace MangaT.Infrastructure.Migrations
 {
     [DbContext(typeof(MangaDbContext))]
-    [Migration("20260611014637_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260611030140_InicializacionDb")]
+    partial class InicializacionDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
