@@ -19,17 +19,45 @@ public class GlobalExceptionHandler(
         CancellationToken cancellationToken)
     {
         var problem = CreateProblemDetails(httpContext, exception);
-
-        // Solo registramos errores 5xx; 4xx son errores esperados del cliente.
-        if (problem.Status >= StatusCodes.Status500InternalServerError)
-        {
-            logger.LogError(exception, "Error no controlado");
-        }
+        LogException(httpContext, exception, problem);
 
         httpContext.Response.StatusCode = problem.Status!.Value;
         await httpContext.Response.WriteAsJsonAsync(problem, cancellationToken);
 
         return true;
+    }
+
+    /// <summary>Registra con nivel y propiedades estructuradas según el tipo de error.</summary>
+    private void LogException(HttpContext httpContext, Exception exception, ProblemDetails problem)
+    {
+        var errorCode = problem.Extensions.TryGetValue("errorCode", out var code)
+            ? code?.ToString() ?? "UNKNOWN"
+            : "UNKNOWN";
+
+        var traceId = httpContext.TraceIdentifier;
+        var path = httpContext.Request.Path.Value ?? "/";
+
+        if (problem.Status >= StatusCodes.Status500InternalServerError)
+        {
+            logger.LogError(
+                exception,
+                "Error no controlado {ErrorCode} en {Method} {Path} (TraceId: {TraceId})",
+                errorCode,
+                httpContext.Request.Method,
+                path,
+                traceId);
+            return;
+        }
+
+        // 4xx: advertencias de negocio o cliente (no requieren stack trace en producción).
+        logger.LogWarning(
+            exception,
+            "Error de cliente {ErrorCode} → {StatusCode} en {Method} {Path} (TraceId: {TraceId})",
+            errorCode,
+            problem.Status,
+            httpContext.Request.Method,
+            path,
+            traceId);
     }
 
     /// <summary>Construye ProblemDetails con código de error y traceId para trazabilidad.</summary>

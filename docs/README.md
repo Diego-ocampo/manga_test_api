@@ -15,6 +15,8 @@
 | Documento | Descripción |
 |-----------|-------------|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Capas, flujo de peticiones, seguridad y errores |
+| [**SOLID.md**](SOLID.md) | **Principios SOLID** con ejemplos en código, specifications y auth DIP |
+| [**LOGGING.md**](LOGGING.md) | **Serilog** — logging estructurado, niveles, sinks y correlación con TraceId |
 | [LEARNING_PATH.md](LEARNING_PATH.md) | Ruta de aprendizaje por fases con ejercicios |
 
 ## Stack actual (.NET 10)
@@ -26,6 +28,7 @@
 | Errores | RFC 9457 Problem Details |
 | Auth | JWT Bearer |
 | BD | EF Core 10 + SQL Server |
+| Logging | **Serilog** (consola + archivo rotativo) |
 | Contenedores | Docker Compose |
 
 ## Inicio rápido

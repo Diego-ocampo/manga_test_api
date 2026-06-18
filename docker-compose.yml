@@ -35,9 +35,12 @@ services:
       Jwt__ExpirationMinutes: ${JWT_EXPIRATION_MINUTES:-60}
     ports:
       - "${API_PORT:-8080}:8080"
+    volumes:
+      - mangat-logs:/app/logs
     depends_on:
       sqlserver:
         condition: service_healthy
 
 volumes:
   mangat-sqlserver-data:
+  mangat-logs:

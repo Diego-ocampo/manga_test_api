@@ -1,6 +1,7 @@
 using MangaT.ApplicationCore.Common;
 using MangaT.ApplicationCore.Interfaces;
 using MangaT.Domain.Entities;
+using MangaT.Domain.Specifications;
 using MangaT.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,27 +9,37 @@ namespace MangaT.Infrastructure.Repositories;
 
 /// <summary>
 /// Implementación de persistencia de mangas usando Entity Framework Core.
+/// Aplica ISpecification traduciendo cada una a WHERE (Open/Closed en consultas).
 /// </summary>
 public class MangaRepository(MangaDbContext context) : IMangaRepository
 {
     /// <inheritdoc />
-    public async Task<PagedResult<Manga>> GetPagedAsync(int page, int pageSize, CancellationToken cancellationToken = default)
+    public Task<PagedResult<Manga>> QueryAsync(
+        int page,
+        int pageSize,
+        IReadOnlyList<ISpecification<Manga>> specifications,
+        MangaSortOrder sortOrder,
+        CancellationToken cancellationToken = default)
     {
-        var query = context.Mangas.OrderBy(m => m.Title);
-        return await ToPagedResultAsync(query, page, pageSize, cancellationToken);
-    }
-
-    /// <inheritdoc />
-    public async Task<PagedResult<Manga>> GetPopularAsync(int page, int pageSize, CancellationToken cancellationToken = default)
-    {
-        var query = context.Mangas.OrderByDescending(m => m.Point);
-        return await ToPagedResultAsync(query, page, pageSize, cancellationToken);
+        var query = ApplySpecifications(context.Mangas, specifications);
+        query = ApplySort(query, sortOrder);
+        return ToPagedResultAsync(query, page, pageSize, cancellationToken);
     }
 
     /// <inheritdoc />
     public async Task<Manga?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return await context.Mangas.FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<Manga?> GetByIdAsync(
+        int id,
+        IReadOnlyList<ISpecification<Manga>> specifications,
+        CancellationToken cancellationToken = default)
+    {
+        var query = ApplySpecifications(context.Mangas.Where(m => m.Id == id), specifications);
+        return await query.FirstOrDefaultAsync(cancellationToken);
     }
 
     /// <inheritdoc />
@@ -51,6 +62,28 @@ public class MangaRepository(MangaDbContext context) : IMangaRepository
         context.Mangas.Remove(manga);
         await context.SaveChangesAsync(cancellationToken);
     }
+
+    /// <summary>
+    /// Encadena WHERE por cada specification — extensible sin modificar este método.
+    /// </summary>
+    private static IQueryable<Manga> ApplySpecifications(
+        IQueryable<Manga> query,
+        IReadOnlyList<ISpecification<Manga>> specifications)
+    {
+        foreach (var specification in specifications)
+        {
+            query = query.Where(specification.ToExpression());
+        }
+
+        return query;
+    }
+
+    private static IQueryable<Manga> ApplySort(IQueryable<Manga> query, MangaSortOrder sortOrder) =>
+        sortOrder switch
+        {
+            MangaSortOrder.PointDesc => query.OrderByDescending(m => m.Point),
+            _ => query.OrderBy(m => m.Title)
+        };
 
     /// <summary>Ejecuta conteo total y aplica Skip/Take para paginación eficiente.</summary>
     private static async Task<PagedResult<Manga>> ToPagedResultAsync(

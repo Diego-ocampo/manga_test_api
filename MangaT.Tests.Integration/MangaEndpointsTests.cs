@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text.Json;
 using MangaT.ApplicationCore.DTOs;
 using Microsoft.AspNetCore.Mvc.Testing;
 
@@ -81,6 +80,60 @@ public class MangaEndpointsTests : IClassFixture<CustomWebApplicationFactory>
         var response = await _client.PostAsJsonAsync("/api/v1/manga", request);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+    }
+
+    /// <summary>Reader no tiene permiso de escritura — debe recibir 403 Forbidden.</summary>
+    [Fact]
+    public async Task Delete_Should_Return_Forbidden_For_Reader_Role()
+    {
+        var token = await LoginAsync("reader", "Reader123!");
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        var response = await _client.DeleteAsync("/api/v1/manga/1");
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
+    /// <summary>Specification MangaByCategorySpecification filtra por query string.</summary>
+    [Fact]
+    public async Task GetAll_Should_Filter_By_Category()
+    {
+        var response = await _client.GetAsync("/api/v1/manga?category=Action&pageSize=50");
+
+        response.EnsureSuccessStatusCode();
+        var content = await response.Content.ReadAsStringAsync();
+
+        Assert.Contains("Naruto", content);
+        Assert.DoesNotContain("One Piece", content);
+    }
+
+    /// <summary>Reader solo ve mangas con Point &gt;= 7 (regla en MangaQuerySpecifications).</summary>
+    [Fact]
+    public async Task GetAll_As_Reader_Should_Hide_Low_Rated_Manga()
+    {
+        var adminToken = await LoginAsync("admin", "Admin123!");
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminToken);
+
+        await _client.PostAsJsonAsync("/api/v1/manga", new CreateMangaRequest
+        {
+            Title = "Low Rated Test Manga",
+            Author = "Test Author",
+            Description = "For reader filter test",
+            Category = "Test",
+            VolumeCount = 1,
+            Point = 5.0,
+            ImageUrl = "https://example.com/low.jpg",
+            DetailUrl = "https://example.com/low"
+        });
+
+        var readerToken = await LoginAsync("reader", "Reader123!");
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", readerToken);
+
+        var response = await _client.GetAsync("/api/v1/manga?pageSize=50");
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync();
+        Assert.DoesNotContain("Low Rated Test Manga", content);
     }
 
     /// <summary>Obtiene un JWT válido del endpoint de login demo.</summary>

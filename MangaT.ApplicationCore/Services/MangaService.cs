@@ -4,38 +4,70 @@ using MangaT.ApplicationCore.DTOs;
 using MangaT.ApplicationCore.Exceptions;
 using MangaT.ApplicationCore.Interfaces;
 using MangaT.ApplicationCore.Mapping;
+using MangaT.ApplicationCore.Specifications;
 using MangaT.Domain.Entities;
+using MangaT.Domain.Exceptions;
 using MangaT.Domain.ValueObjects;
+using Microsoft.Extensions.Logging;
 
 namespace MangaT.ApplicationCore.Services;
 
 /// <summary>
-/// Orquesta casos de uso de mangas: validación, reglas de dominio y persistencia.
+/// Orquesta casos de uso de mangas: validación, reglas de dominio, specifications y persistencia.
+/// Single Responsibility: coordina; no construye SQL ni conoce HttpContext.
 /// </summary>
 public class MangaService(
     IMangaRepository mangaRepository,
+    ICurrentUserContext currentUser,
     IValidator<CreateMangaRequest> createValidator,
-    IValidator<UpdateMangaRequest> updateValidator) : IMangaService
+    IValidator<UpdateMangaRequest> updateValidator,
+    ILogger<MangaService> logger) : IMangaService
 {
     /// <inheritdoc />
-    public async Task<PagedResult<MangaDto>> GetPagedAsync(int page, int pageSize, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<MangaDto>> GetPagedAsync(
+        int page,
+        int pageSize,
+        string? category = null,
+        CancellationToken cancellationToken = default)
     {
-        var result = await mangaRepository.GetPagedAsync(NormalizePage(page), NormalizePageSize(pageSize), cancellationToken);
+        var specifications = MangaQuerySpecifications.BuildForList(currentUser, category);
+
+        var result = await mangaRepository.QueryAsync(
+            NormalizePage(page),
+            NormalizePageSize(pageSize),
+            specifications,
+            MangaSortOrder.TitleAsc,
+            cancellationToken);
+
         return MapPagedResult(result);
     }
 
     /// <inheritdoc />
-    public async Task<PagedResult<MangaDto>> GetPopularAsync(int page, int pageSize, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<MangaDto>> GetPopularAsync(
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default)
     {
-        var result = await mangaRepository.GetPopularAsync(NormalizePage(page), NormalizePageSize(pageSize), cancellationToken);
+        // Misma regla Reader que en listado, pero ordenado por calificación.
+        var specifications = MangaQuerySpecifications.BuildForList(currentUser, category: null);
+
+        var result = await mangaRepository.QueryAsync(
+            NormalizePage(page),
+            NormalizePageSize(pageSize),
+            specifications,
+            MangaSortOrder.PointDesc,
+            cancellationToken);
+
         return MapPagedResult(result);
     }
 
     /// <inheritdoc />
     public async Task<MangaDto> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var manga = await mangaRepository.GetByIdAsync(id, cancellationToken)
-            ?? throw AppException.NotFound($"No se encontró el manga con id {id}.");
+        var specifications = MangaQuerySpecifications.BuildForSingle(currentUser);
+
+        var manga = await mangaRepository.GetByIdAsync(id, specifications, cancellationToken)
+            ?? throw new MangaNotFoundException(id);
 
         return manga.ToDto();
     }
@@ -56,6 +88,13 @@ public class MangaService(
             request.DetailUrl);
 
         await mangaRepository.AddAsync(manga, cancellationToken);
+
+        logger.LogInformation(
+            "Manga creado {MangaId} — {Title} por {Author}",
+            manga.Id,
+            manga.Title,
+            manga.Author);
+
         return manga.ToDto();
     }
 
@@ -65,7 +104,7 @@ public class MangaService(
         await ValidateAsync(updateValidator, request, cancellationToken);
 
         var manga = await mangaRepository.GetByIdAsync(id, cancellationToken)
-            ?? throw AppException.NotFound($"No se encontró el manga con id {id}.");
+            ?? throw new MangaNotFoundException(id);
 
         manga.Update(
             request.Title,
@@ -78,6 +117,12 @@ public class MangaService(
             request.DetailUrl);
 
         await mangaRepository.UpdateAsync(manga, cancellationToken);
+
+        logger.LogInformation(
+            "Manga actualizado {MangaId} — {Title}",
+            manga.Id,
+            manga.Title);
+
         return manga.ToDto();
     }
 
@@ -85,9 +130,14 @@ public class MangaService(
     public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
         var manga = await mangaRepository.GetByIdAsync(id, cancellationToken)
-            ?? throw AppException.NotFound($"No se encontró el manga con id {id}.");
+            ?? throw new MangaNotFoundException(id);
 
         await mangaRepository.DeleteAsync(manga, cancellationToken);
+
+        logger.LogInformation(
+            "Manga eliminado {MangaId} — {Title}",
+            manga.Id,
+            manga.Title);
     }
 
     /// <summary>Convierte entidades de dominio paginadas a DTOs para la API.</summary>

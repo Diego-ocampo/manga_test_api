@@ -30,7 +30,7 @@ Este proyecto está diseñado para estudiar backend de forma progresiva.
 - [x] Result pattern
 - [x] Problem Details
 
-**Ejercicio**: Agrega filtro por `category` en `GET /api/v1/manga?category=Action`.
+**Ejercicio**: Agrega filtro por `category` en `GET /api/v1/manga?category=Action`. ✅ Implementado con Specification pattern — ver [SOLID.md](SOLID.md).
 
 ## Fase 4 — Seguridad (ya implementado)
 
@@ -39,7 +39,7 @@ Este proyecto está diseñado para estudiar backend de forma progresiva.
 - [x] Endpoint de login
 - [x] Protección de endpoints de escritura
 
-**Ejercicio**: Haz que `Reader` solo pueda ver manga con `Point >= 7`.
+**Ejercicio**: Haz que `Reader` solo pueda ver manga con `Point >= 7`. ✅ Implementado en `MangaQuerySpecifications`.
 
 ## Fase 5 — Testing (ya implementado)
 
@@ -47,7 +47,7 @@ Este proyecto está diseñado para estudiar backend de forma progresiva.
 - [x] Tests unitarios de servicio con mocks
 - [x] Tests de integración con `WebApplicationFactory`
 
-**Ejercicio**: Agrega un test que verifique que `reader` recibe 403 al intentar DELETE.
+**Ejercicio**: Agrega un test que verifique que `reader` recibe 403 al intentar DELETE. ✅ `Delete_Should_Return_Forbidden_For_Reader_Role`.
 
 ## Fase 6 — Próximos pasos (por implementar)
 
@@ -55,7 +55,8 @@ Este proyecto está diseñado para estudiar backend de forma progresiva.
 - [x] Docker Compose (API + SQL Server) — ver [MANUAL-DOCKER.md](MANUAL-DOCKER.md)
 - [ ] GitHub Actions (build + test)
 - [ ] User Secrets para JWT y connection string
-- [ ] Specification pattern para consultas reutilizables
+- [x] Specification pattern para consultas reutilizables — ver [SOLID.md](SOLID.md)
+- [x] SOLID aplicado (auth DIP, Reader, specifications) — ver [SOLID.md](SOLID.md)
 
 ## Preguntas guía para estudiar
 

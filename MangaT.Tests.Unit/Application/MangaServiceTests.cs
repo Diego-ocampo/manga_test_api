@@ -1,11 +1,12 @@
 using FluentValidation;
 using FluentValidation.Results;
 using MangaT.ApplicationCore.DTOs;
-using MangaT.ApplicationCore.Exceptions;
 using MangaT.ApplicationCore.Interfaces;
 using MangaT.ApplicationCore.Services;
 using MangaT.Domain.Entities;
+using MangaT.Domain.Exceptions;
 using MangaT.Domain.ValueObjects;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace MangaT.Tests.Unit.Application;
@@ -16,12 +17,15 @@ namespace MangaT.Tests.Unit.Application;
 public class MangaServiceTests
 {
     private readonly Mock<IMangaRepository> _repository = new();
+    private readonly Mock<ICurrentUserContext> _currentUser = new();
     private readonly Mock<IValidator<CreateMangaRequest>> _createValidator = new();
     private readonly Mock<IValidator<UpdateMangaRequest>> _updateValidator = new();
+    private readonly Mock<ILogger<MangaService>> _logger = new();
 
     public MangaServiceTests()
     {
-        // Por defecto las validaciones pasan; cada test puede sobrescribir el comportamiento.
+        _currentUser.Setup(u => u.IsInRole("Reader")).Returns(false);
+
         _createValidator
             .Setup(v => v.ValidateAsync(It.IsAny<CreateMangaRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
@@ -32,17 +36,15 @@ public class MangaServiceTests
     }
 
     [Fact]
-    public async Task GetByIdAsync_Should_Throw_NotFound_When_Manga_Does_Not_Exist()
+    public async Task GetByIdAsync_Should_Throw_MangaNotFoundException_When_Manga_Does_Not_Exist()
     {
-        _repository.Setup(r => r.GetByIdAsync(99, It.IsAny<CancellationToken>()))
+        _repository
+            .Setup(r => r.GetByIdAsync(99, It.IsAny<IReadOnlyList<MangaT.Domain.Specifications.ISpecification<Manga>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Manga?)null);
 
         var service = CreateService();
 
-        var exception = await Assert.ThrowsAsync<AppException>(() => service.GetByIdAsync(99));
-
-        Assert.Equal("NOT_FOUND", exception.ErrorCode);
-        Assert.Equal(404, exception.StatusCode);
+        await Assert.ThrowsAsync<MangaNotFoundException>(() => service.GetByIdAsync(99));
     }
 
     [Fact]
@@ -72,5 +74,10 @@ public class MangaServiceTests
     }
 
     private MangaService CreateService() =>
-        new(_repository.Object, _createValidator.Object, _updateValidator.Object);
+        new(
+            _repository.Object,
+            _currentUser.Object,
+            _createValidator.Object,
+            _updateValidator.Object,
+            _logger.Object);
 }

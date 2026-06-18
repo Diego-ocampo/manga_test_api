@@ -1,70 +1,39 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using MangaT.ApplicationCore.DTOs;
 using MangaT.ApplicationCore.Interfaces;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Logging;
 
 namespace MangaT.ApplicationCore.Services;
 
 /// <summary>
-/// Autenticación demo: valida usuarios en configuración y emite tokens JWT firmados.
+/// Caso de uso de login: orquesta validación de credenciales y emisión de token.
+/// Single Responsibility + Dependency Inversion: no conoce appsettings ni JwtSecurityToken.
 /// </summary>
-public class AuthService(IConfiguration configuration) : IAuthService
+public class AuthService(
+    IUserCredentialValidator credentialValidator,
+    IJwtTokenGenerator tokenGenerator,
+    ILogger<AuthService> logger) : IAuthService
 {
     /// <inheritdoc />
     public Task<LoginResponse?> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)
     {
-        // Usuarios de demostración definidos en appsettings (DemoUsers).
-        var users = configuration.GetSection("DemoUsers").Get<List<DemoUser>>() ?? [];
-        var user = users.FirstOrDefault(u =>
-            string.Equals(u.Username, request.Username, StringComparison.OrdinalIgnoreCase) &&
-            u.Password == request.Password);
+        var user = credentialValidator.Validate(request.Username, request.Password);
 
         if (user is null)
         {
+            logger.LogWarning(
+                "Intento de login fallido para el usuario {Username}",
+                request.Username);
+
             return Task.FromResult<LoginResponse?>(null);
         }
 
-        var jwtSettings = configuration.GetSection("Jwt");
-        var key = jwtSettings["Key"] ?? throw new InvalidOperationException("JWT Key no configurada.");
-        var issuer = jwtSettings["Issuer"] ?? "MangaT.API";
-        var audience = jwtSettings["Audience"] ?? "MangaT.Client";
-        var expirationMinutes = int.TryParse(jwtSettings["ExpirationMinutes"], out var minutes) ? minutes : 60;
-        var expiresAt = DateTime.UtcNow.AddMinutes(expirationMinutes);
+        var response = tokenGenerator.GenerateToken(user);
 
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Role, user.Role)
-        };
+        logger.LogInformation(
+            "Login exitoso para {Username} con rol {Role}",
+            user.Username,
+            user.Role);
 
-        var credentials = new SigningCredentials(
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
-            SecurityAlgorithms.HmacSha256);
-
-        var token = new JwtSecurityToken(
-            issuer,
-            audience,
-            claims,
-            expires: expiresAt,
-            signingCredentials: credentials);
-
-        return Task.FromResult<LoginResponse?>(new LoginResponse
-        {
-            Token = new JwtSecurityTokenHandler().WriteToken(token),
-            Username = user.Username,
-            Role = user.Role,
-            ExpiresAt = expiresAt
-        });
-    }
-
-    /// <summary>Modelo interno para deserializar DemoUsers desde configuración.</summary>
-    private sealed class DemoUser
-    {
-        public string Username { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-        public string Role { get; set; } = string.Empty;
+        return Task.FromResult<LoginResponse?>(response);
     }
 }
