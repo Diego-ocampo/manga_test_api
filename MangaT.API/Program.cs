@@ -1,6 +1,6 @@
 using MangaT.Infrastructure;
 using MangaT.Infrastructure.Persistence;
-using MangaT.Infrastructure.Seed;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +18,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<MangaDbContext>();
-    
-     await MangaDbSeeder.SeedAsync(context);
+    await context.Database.MigrateAsync();
 }
 
 if (app.Environment.IsDevelopment())
