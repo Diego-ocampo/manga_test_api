@@ -1,4 +1,4 @@
-using MangaT.ApplicationCore.Entities;
+using MangaT.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -36,7 +36,7 @@ public class MangaConfiguration : IEntityTypeConfiguration<Manga>
                .HasDefaultValueSql("GETUTCDATE()");
 
         builder.HasData(
-            new Manga
+            new
             {
                 Id = 1,
                 Title = "One Piece",
@@ -49,7 +49,7 @@ public class MangaConfiguration : IEntityTypeConfiguration<Manga>
                 DetailUrl = "https://example.com/onepiece",
                 CreatedDate = SeedDate
             },
-            new Manga
+            new
             {
                 Id = 2,
                 Title = "Naruto",
@@ -62,7 +62,7 @@ public class MangaConfiguration : IEntityTypeConfiguration<Manga>
                 DetailUrl = "https://example.com/naruto",
                 CreatedDate = SeedDate
             },
-            new Manga
+            new
             {
                 Id = 3,
                 Title = "Bleach",
@@ -75,7 +75,7 @@ public class MangaConfiguration : IEntityTypeConfiguration<Manga>
                 DetailUrl = "https://example.com/bleach",
                 CreatedDate = SeedDate
             },
-            new Manga
+            new
             {
                 Id = 4,
                 Title = "Attack on Titan",
@@ -88,7 +88,7 @@ public class MangaConfiguration : IEntityTypeConfiguration<Manga>
                 DetailUrl = "https://example.com/attackontitan",
                 CreatedDate = SeedDate
             },
-            new Manga
+            new
             {
                 Id = 5,
                 Title = "My Hero Academia",

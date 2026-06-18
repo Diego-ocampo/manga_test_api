@@ -1,4 +1,19 @@
-@MangaT.API_HostAddress = http://localhost:5292
+@MangaT_HostAddress = http://localhost:5292
 
-GET {{MangaT.API_HostAddress}}/api/v1/manga/popular
-Accept: application/json
+### Login como Admin
+POST {{MangaT_HostAddress}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Admin123!"
+}
+
+### Listar manga populares
+GET {{MangaT_HostAddress}}/api/v1/manga/popular?page=1&pageSize=5
+
+### Obtener manga por id
+GET {{MangaT_HostAddress}}/api/v1/manga/1
+
+### Health check
+GET {{MangaT_HostAddress}}/health

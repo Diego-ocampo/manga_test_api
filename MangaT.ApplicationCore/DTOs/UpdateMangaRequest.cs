@@ -1,15 +1,13 @@
-namespace MangaT.ApplicationCore.Entities;
+namespace MangaT.ApplicationCore.DTOs;
 
-public class Manga
+public class UpdateMangaRequest
 {
-    public int Id { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string Author { get; set; } = string.Empty;
+    public required string Title { get; set; }
+    public required string Author { get; set; }
     public string Description { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty;
     public int VolumeCount { get; set; }
     public double Point { get; set; }
     public string ImageUrl { get; set; } = string.Empty;
     public string DetailUrl { get; set; } = string.Empty;
-    public DateTime CreatedDate { get; set; }
 }

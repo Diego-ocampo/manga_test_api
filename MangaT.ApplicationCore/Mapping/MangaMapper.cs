@@ -1,5 +1,5 @@
 using MangaT.ApplicationCore.DTOs;
-using MangaT.ApplicationCore.Entities;
+using MangaT.Domain.Entities;
 
 namespace MangaT.ApplicationCore.Mapping;
 
@@ -7,13 +7,15 @@ public static class MangaMapper
 {
     public static MangaDto ToDto(this Manga manga) => new()
     {
+        Id = manga.Id,
         Title = manga.Title,
         Author = manga.Author,
         Description = manga.Description,
         Category = manga.Category,
         VolumeCount = manga.VolumeCount,
         Point = manga.Point,
-        ImageUrl = new Uri(manga.ImageUrl),
-        DetailUrl = new Uri(manga.DetailUrl)
+        ImageUrl = manga.ImageUrl,
+        DetailUrl = manga.DetailUrl,
+        CreatedDate = manga.CreatedDate
     };
 }

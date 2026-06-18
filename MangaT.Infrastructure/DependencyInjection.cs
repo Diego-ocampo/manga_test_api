@@ -1,5 +1,4 @@
 using MangaT.ApplicationCore.Interfaces;
-using MangaT.ApplicationCore.Services;
 using MangaT.Infrastructure.Persistence;
 using MangaT.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +17,6 @@ public static class DependencyInjection
 
         services.AddScoped<IMangaRepository, MangaRepository>();
 
-        return services;
-    }
-
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
-    {
-        services.AddScoped<IMangaService, MangaService>();
         return services;
     }
 }

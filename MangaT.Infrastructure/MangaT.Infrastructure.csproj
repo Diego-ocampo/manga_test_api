@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MangaT.ApplicationCore\MangaT.ApplicationCore.csproj" />
+    <ProjectReference Include="..\MangaT.Domain\MangaT.Domain.csproj" />
   </ItemGroup>
 
 </Project>

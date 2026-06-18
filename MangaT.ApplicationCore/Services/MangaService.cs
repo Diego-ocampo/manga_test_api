@@ -1,14 +1,112 @@
+using FluentValidation;
+using MangaT.ApplicationCore.Common;
 using MangaT.ApplicationCore.DTOs;
+using MangaT.ApplicationCore.Exceptions;
 using MangaT.ApplicationCore.Interfaces;
 using MangaT.ApplicationCore.Mapping;
+using MangaT.Domain.Entities;
+using MangaT.Domain.ValueObjects;
 
 namespace MangaT.ApplicationCore.Services;
 
-public class MangaService(IMangaRepository mangaRepository) : IMangaService
+public class MangaService(
+    IMangaRepository mangaRepository,
+    IValidator<CreateMangaRequest> createValidator,
+    IValidator<UpdateMangaRequest> updateValidator) : IMangaService
 {
-    public async Task<IReadOnlyList<MangaDto>> GetPopularAsync(CancellationToken cancellationToken = default)
+    public async Task<PagedResult<MangaDto>> GetPagedAsync(int page, int pageSize, CancellationToken cancellationToken = default)
     {
-        var mangas = await mangaRepository.GetPopularAsync(cancellationToken);
-        return mangas.Select(m => m.ToDto()).ToList();
+        var result = await mangaRepository.GetPagedAsync(NormalizePage(page), NormalizePageSize(pageSize), cancellationToken);
+        return MapPagedResult(result);
     }
+
+    public async Task<PagedResult<MangaDto>> GetPopularAsync(int page, int pageSize, CancellationToken cancellationToken = default)
+    {
+        var result = await mangaRepository.GetPopularAsync(NormalizePage(page), NormalizePageSize(pageSize), cancellationToken);
+        return MapPagedResult(result);
+    }
+
+    public async Task<MangaDto> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    {
+        var manga = await mangaRepository.GetByIdAsync(id, cancellationToken)
+            ?? throw AppException.NotFound($"No se encontró el manga con id {id}.");
+
+        return manga.ToDto();
+    }
+
+    public async Task<MangaDto> CreateAsync(CreateMangaRequest request, CancellationToken cancellationToken = default)
+    {
+        await ValidateAsync(createValidator, request, cancellationToken);
+
+        var manga = Manga.Create(
+            request.Title,
+            request.Author,
+            request.Description,
+            request.Category,
+            request.VolumeCount,
+            new Rating(request.Point),
+            request.ImageUrl,
+            request.DetailUrl);
+
+        await mangaRepository.AddAsync(manga, cancellationToken);
+        return manga.ToDto();
+    }
+
+    public async Task<MangaDto> UpdateAsync(int id, UpdateMangaRequest request, CancellationToken cancellationToken = default)
+    {
+        await ValidateAsync(updateValidator, request, cancellationToken);
+
+        var manga = await mangaRepository.GetByIdAsync(id, cancellationToken)
+            ?? throw AppException.NotFound($"No se encontró el manga con id {id}.");
+
+        manga.Update(
+            request.Title,
+            request.Author,
+            request.Description,
+            request.Category,
+            request.VolumeCount,
+            new Rating(request.Point),
+            request.ImageUrl,
+            request.DetailUrl);
+
+        await mangaRepository.UpdateAsync(manga, cancellationToken);
+        return manga.ToDto();
+    }
+
+    public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+    {
+        var manga = await mangaRepository.GetByIdAsync(id, cancellationToken)
+            ?? throw AppException.NotFound($"No se encontró el manga con id {id}.");
+
+        await mangaRepository.DeleteAsync(manga, cancellationToken);
+    }
+
+    private static PagedResult<MangaDto> MapPagedResult(PagedResult<Manga> result) => new()
+    {
+        Items = result.Items.Select(m => m.ToDto()).ToList(),
+        Page = result.Page,
+        PageSize = result.PageSize,
+        TotalCount = result.TotalCount
+    };
+
+    private static async Task ValidateAsync<T>(IValidator<T> validator, T request, CancellationToken cancellationToken)
+    {
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        if (validationResult.IsValid)
+        {
+            return;
+        }
+
+        var error = string.Join(" ", validationResult.Errors.Select(e => e.ErrorMessage));
+        throw AppException.Validation(error);
+    }
+
+    private static int NormalizePage(int page) => page < 1 ? 1 : page;
+
+    private static int NormalizePageSize(int pageSize) => pageSize switch
+    {
+        < 1 => 10,
+        > 50 => 50,
+        _ => pageSize
+    };
 }

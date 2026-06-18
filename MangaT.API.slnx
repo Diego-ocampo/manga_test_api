@@ -1,5 +1,8 @@
 <Solution>
   <Project Path="MangaT.API/MangaT.API.csproj" />
-  <Project Path="MangaT.ApplicationCore/MangaT.ApplicationCore.csproj" Id="92787ca2-53b4-427a-a806-8c65f8424afe" />
-  <Project Path="MangaT.Infrastructure/MangaT.Infrastructure.csproj" Id="b188f4ad-253d-4462-841a-787b2a278c18" />
+  <Project Path="MangaT.ApplicationCore/MangaT.ApplicationCore.csproj" />
+  <Project Path="MangaT.Domain/MangaT.Domain.csproj" />
+  <Project Path="MangaT.Infrastructure/MangaT.Infrastructure.csproj" />
+  <Project Path="MangaT.Tests.Integration/MangaT.Tests.Integration.csproj" />
+  <Project Path="MangaT.Tests.Unit/MangaT.Tests.Unit.csproj" />
 </Solution>

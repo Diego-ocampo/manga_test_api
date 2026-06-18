@@ -1,4 +1,4 @@
-using MangaT.ApplicationCore.Entities;
+using MangaT.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MangaT.Infrastructure.Persistence;
