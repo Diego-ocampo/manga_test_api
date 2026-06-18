@@ -5,12 +5,14 @@ namespace MangaT.API.Logging;
 
 /// <summary>
 /// Configuración centralizada de Serilog para MangaT API.
-/// Lee sinks y niveles desde appsettings y enriquece cada evento con contexto.
+/// Usa bloques <c>extension</c> de C# 14 (.NET 10).
+/// Comparar con <see cref="Swagger.SwaggerConfiguration"/> que conserva el estilo clásico con <c>this</c>.
 /// </summary>
 public static class SerilogExtensions
 {
     /// <summary>
     /// Logger mínimo de arranque: captura fallos antes de cargar appsettings completo.
+    /// (Método estático normal, no es extension method.)
     /// </summary>
     public static void ConfigureBootstrapLogger()
     {
@@ -20,72 +22,75 @@ public static class SerilogExtensions
             .CreateBootstrapLogger();
     }
 
-    /// <summary>
-    /// Integra Serilog con el host de ASP.NET Core (reemplaza el logging por defecto).
-    /// </summary>
-    public static WebApplicationBuilder AddMangaTSerilog(this WebApplicationBuilder builder)
+    // C# 14: bloque extension — el receptor es WebApplicationBuilder (equivalente a `this WebApplicationBuilder`).
+    extension(WebApplicationBuilder builder)
     {
-        builder.Host.UseSerilog((context, _, loggerConfiguration) =>
+        /// <summary>Integra Serilog con el host de ASP.NET Core (reemplaza el logging por defecto).</summary>
+        public WebApplicationBuilder AddMangaTSerilog()
         {
-            loggerConfiguration
-                .ReadFrom.Configuration(context.Configuration)
-                .Enrich.FromLogContext()
-                .Enrich.WithProperty("Application", "MangaT.API");
-
-            // Tests: silenciar ruido en consola salvo errores fatales.
-            if (context.HostingEnvironment.IsEnvironment("Testing"))
+            builder.Host.UseSerilog((context, _, loggerConfiguration) =>
             {
-                loggerConfiguration.MinimumLevel.Fatal();
-            }
-        });
+                loggerConfiguration
+                    .ReadFrom.Configuration(context.Configuration)
+                    .Enrich.FromLogContext()
+                    .Enrich.WithProperty("Application", "MangaT.API");
 
-        return builder;
+                // Tests: silenciar ruido en consola salvo errores fatales.
+                if (context.HostingEnvironment.IsEnvironment("Testing"))
+                {
+                    loggerConfiguration.MinimumLevel.Fatal();
+                }
+            });
+
+            return builder;
+        }
     }
 
-    /// <summary>
-    /// Registra cada petición HTTP con duración, status y TraceId (correlación con ProblemDetails).
-    /// </summary>
-    public static WebApplication UseMangaTRequestLogging(this WebApplication app)
+    extension(WebApplication app)
     {
-        if (app.Environment.IsEnvironment("Testing"))
+        /// <summary>Registra cada petición HTTP con duración, status y TraceId (correlación con ProblemDetails).</summary>
+        public WebApplication UseMangaTRequestLogging()
         {
+            if (app.Environment.IsEnvironment("Testing"))
+            {
+                return app;
+            }
+
+            app.UseSerilogRequestLogging(options =>
+            {
+                options.MessageTemplate =
+                    "HTTP {RequestMethod} {RequestPath} → {StatusCode} en {Elapsed:0.0000} ms";
+
+                options.GetLevel = (httpContext, elapsed, ex) =>
+                {
+                    if (ex is not null || httpContext.Response.StatusCode >= 500)
+                    {
+                        return LogEventLevel.Error;
+                    }
+
+                    if (httpContext.Response.StatusCode >= 400)
+                    {
+                        return LogEventLevel.Warning;
+                    }
+
+                    // Endpoints de health check: menos ruido en consola.
+                    if (httpContext.Request.Path.StartsWithSegments("/health"))
+                    {
+                        return LogEventLevel.Debug;
+                    }
+
+                    return LogEventLevel.Information;
+                };
+
+                options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+                {
+                    diagnosticContext.Set("TraceId", httpContext.TraceIdentifier);
+                    diagnosticContext.Set("User", httpContext.User.Identity?.Name ?? "anonymous");
+                    diagnosticContext.Set("ClientIp", httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown");
+                };
+            });
+
             return app;
         }
-
-        app.UseSerilogRequestLogging(options =>
-        {
-            options.MessageTemplate =
-                "HTTP {RequestMethod} {RequestPath} → {StatusCode} en {Elapsed:0.0000} ms";
-
-            options.GetLevel = (httpContext, elapsed, ex) =>
-            {
-                if (ex is not null || httpContext.Response.StatusCode >= 500)
-                {
-                    return LogEventLevel.Error;
-                }
-
-                if (httpContext.Response.StatusCode >= 400)
-                {
-                    return LogEventLevel.Warning;
-                }
-
-                // Endpoints de health check: menos ruido en consola.
-                if (httpContext.Request.Path.StartsWithSegments("/health"))
-                {
-                    return LogEventLevel.Debug;
-                }
-
-                return LogEventLevel.Information;
-            };
-
-            options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
-            {
-                diagnosticContext.Set("TraceId", httpContext.TraceIdentifier);
-                diagnosticContext.Set("User", httpContext.User.Identity?.Name ?? "anonymous");
-                diagnosticContext.Set("ClientIp", httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown");
-            };
-        });
-
-        return app;
     }
 }

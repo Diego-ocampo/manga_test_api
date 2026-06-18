@@ -3,8 +3,14 @@ using Microsoft.OpenApi;
 namespace MangaT.API.Swagger;
 
 /// <summary>
-/// Configuración de Swagger UI y Swashbuckle como alternativa a Scalar/OpenAPI nativo.
+/// Configuración de Swagger UI y Swashbuckle.
 /// </summary>
+/// <remarks>
+/// <para><b>ESTILO CLÁSICO (C# 3–13):</b> extension methods con parámetro <c>this</c>.</para>
+/// <para>Este archivo se mantiene a propósito para comparar con C# 14 (<c>extension</c> blocks)
+/// en <c>SerilogExtensions</c>, <c>DependencyInjection</c> y <c>MangaMapper</c>.</para>
+/// <para><b>Preguntas de repaso:</b> ¿Qué hace el modificador <c>this</c>? ¿En qué tipo de clase deben vivir?</para>
+/// </remarks>
 public static class SwaggerConfiguration
 {
     /// <summary>Registra generación de documento Swagger con soporte JWT Bearer.</summary>

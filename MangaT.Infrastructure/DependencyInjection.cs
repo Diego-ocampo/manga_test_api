@@ -9,28 +9,30 @@ namespace MangaT.Infrastructure;
 
 /// <summary>
 /// Registro de servicios de infraestructura: EF Core, SQL Server, auth y repositorios.
+/// Sintaxis C# 14: bloques <c>extension</c> sobre <see cref="IServiceCollection"/>.
 /// </summary>
 public static class DependencyInjection
 {
-    /// <summary>Implementaciones concretas de auth (JWT + usuarios demo).</summary>
-    public static IServiceCollection AddInfrastructureAuth(this IServiceCollection services)
+    extension(IServiceCollection services)
     {
-        services.AddScoped<IUserCredentialValidator, ConfigurationUserCredentialValidator>();
-        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-        return services;
-    }
+        /// <summary>Implementaciones concretas de auth (JWT + usuarios demo).</summary>
+        public IServiceCollection AddInfrastructureAuth()
+        {
+            services.AddScoped<IUserCredentialValidator, ConfigurationUserCredentialValidator>();
+            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+            return services;
+        }
 
-    /// <summary>Configura DbContext con SQL Server, auth y el repositorio de mangas.</summary>
-    public static IServiceCollection AddInfrastructure(
-        this IServiceCollection services,
-        string connectionString)
-    {
-        services.AddDbContext<MangaDbContext>(options =>
-            options.UseSqlServer(connectionString));
+        /// <summary>Configura DbContext con SQL Server, auth y el repositorio de mangas.</summary>
+        public IServiceCollection AddInfrastructure(string connectionString)
+        {
+            services.AddDbContext<MangaDbContext>(options =>
+                options.UseSqlServer(connectionString));
 
-        services.AddInfrastructureAuth();
-        services.AddScoped<IMangaRepository, MangaRepository>();
+            services.AddInfrastructureAuth();
+            services.AddScoped<IMangaRepository, MangaRepository>();
 
-        return services;
+            return services;
+        }
     }
 }

@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <!-- C# 14 (.NET 10): habilita bloques `extension` además del estilo clásico con `this`. -->
+    <LangVersion>14</LangVersion>
+  </PropertyGroup>
+</Project>

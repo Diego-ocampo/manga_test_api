@@ -16,6 +16,7 @@ Este documento muestra **qué novedades de .NET 10 usa el proyecto hoy** y dónd
 | Auth | JWT Bearer | ✅ Activo |
 | Health | EF Core health check | ✅ Activo |
 | Docker | Imágenes `dotnet/sdk:10.0` y `aspnet:10.0` | ✅ Activo |
+| C# 14 | Extension members (`extension` blocks) | ✅ Activo |
 
 ---
 
@@ -185,6 +186,55 @@ curl http://localhost:8080/openapi/v1.json
 # Scalar UI (moderno)
 # Abrir http://localhost:8080/scalar/v1
 ```
+
+---
+
+## 8. Extension members — C# 14 (dos sintaxis a propósito)
+
+**.NET 10** usa **C# 14**, que introduce bloques `extension`. El proyecto muestra **ambos estilos** para estudio:
+
+| Estilo | Sintaxis | Archivo de ejemplo |
+|--------|----------|-------------------|
+| **Clásico** (C# 3–13) | `public static T Metodo(this T x)` | `MangaT.API/Swagger/SwaggerConfiguration.cs` |
+| **Moderno** (C# 14) | `extension(T x) { public T Metodo() }` | `SerilogExtensions.cs`, `DependencyInjection.cs`, `MangaMapper.cs` |
+
+`Directory.Build.props` fija `<LangVersion>14</LangVersion>` en toda la solución.
+
+### Clásico (Swagger — conservado a propósito)
+
+```csharp
+public static IServiceCollection AddMangaTSwagger(this IServiceCollection services)
+{
+    // ...
+    return services;
+}
+```
+
+### Moderno C# 14 (Serilog / DI)
+
+```csharp
+public static class SerilogExtensions
+{
+    extension(WebApplicationBuilder builder)
+    {
+        public WebApplicationBuilder AddMangaTSerilog()
+        {
+            builder.Host.UseSerilog(/* ... */);
+            return builder;
+        }
+    }
+}
+```
+
+**Uso idéntico desde fuera:** `builder.AddMangaTSerilog();` — el compilador resuelve ambos estilos igual.
+
+### Preguntas de repaso (para evaluar lectura del código)
+
+1. ¿Qué archivo usa **solo** el estilo clásico con `this`? ¿Por qué lo dejamos?
+2. ¿En qué tipo de clase deben declararse los extension methods (clásicos o C# 14)?
+3. ¿`ConfigureBootstrapLogger()` es un extension method? ¿Por qué sí o no?
+4. Escribe cómo se vería `AddApplication()` en estilo clásico vs bloque `extension`.
+5. ¿Qué ventaja tendría C# 14 si quisiéramos añadir una **propiedad** de extensión (no solo métodos)?
 
 ---
 
