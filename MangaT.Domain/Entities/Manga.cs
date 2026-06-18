@@ -3,6 +3,9 @@ using MangaT.Domain.ValueObjects;
 
 namespace MangaT.Domain.Entities;
 
+/// <summary>
+/// Agregado raíz del dominio. Encapsula reglas de negocio e impide estados inválidos.
+/// </summary>
 public class Manga
 {
     public int Id { get; private set; }
@@ -16,10 +19,12 @@ public class Manga
     public string DetailUrl { get; private set; } = string.Empty;
     public DateTime CreatedDate { get; private set; }
 
+    /// <summary>Constructor privado requerido por EF Core.</summary>
     private Manga()
     {
     }
 
+    /// <summary>Fábrica para crear un manga nuevo con validaciones de dominio.</summary>
     public static Manga Create(
         string title,
         string author,
@@ -48,6 +53,7 @@ public class Manga
         };
     }
 
+    /// <summary>Actualiza todos los campos editables del manga.</summary>
     public void Update(
         string title,
         string author,
@@ -72,6 +78,7 @@ public class Manga
         DetailUrl = detailUrl.Trim();
     }
 
+    /// <summary>Actualiza solo la calificación del manga.</summary>
     public void UpdateRating(Rating rating) => Point = rating.Value;
 
     private static void ValidateTitle(string title)

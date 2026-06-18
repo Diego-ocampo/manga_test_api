@@ -1,5 +1,6 @@
 namespace MangaT.ApplicationCore.DTOs;
 
+/// <summary>Payload para crear un manga (POST /api/v1/manga).</summary>
 public class CreateMangaRequest
 {
     public required string Title { get; set; }

@@ -5,10 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MangaT.API.ExceptionHandling;
 
+/// <summary>
+/// Captura excepciones globales y las traduce a respuestas ProblemDetails (JSON).
+/// </summary>
 public class GlobalExceptionHandler(
     ILogger<GlobalExceptionHandler> logger,
     IHostEnvironment environment) : IExceptionHandler
 {
+    /// <inheritdoc />
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
         Exception exception,
@@ -16,6 +20,7 @@ public class GlobalExceptionHandler(
     {
         var problem = CreateProblemDetails(httpContext, exception);
 
+        // Solo registramos errores 5xx; 4xx son errores esperados del cliente.
         if (problem.Status >= StatusCodes.Status500InternalServerError)
         {
             logger.LogError(exception, "Error no controlado");
@@ -27,6 +32,7 @@ public class GlobalExceptionHandler(
         return true;
     }
 
+    /// <summary>Construye ProblemDetails con código de error y traceId para trazabilidad.</summary>
     private ProblemDetails CreateProblemDetails(HttpContext httpContext, Exception exception)
     {
         var (statusCode, title, errorCode, detail) = MapException(exception);
@@ -46,6 +52,7 @@ public class GlobalExceptionHandler(
         return problem;
     }
 
+    /// <summary>Mapea tipos de excepción de dominio/aplicación a códigos HTTP.</summary>
     private (int StatusCode, string Title, string ErrorCode, string Detail) MapException(Exception exception) =>
         exception switch
         {

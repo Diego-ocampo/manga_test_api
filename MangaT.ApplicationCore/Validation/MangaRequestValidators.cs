@@ -3,6 +3,7 @@ using MangaT.ApplicationCore.DTOs;
 
 namespace MangaT.ApplicationCore.Validation;
 
+/// <summary>Reglas de validación para la creación de mangas (alineadas con EF Core).</summary>
 public class CreateMangaRequestValidator : AbstractValidator<CreateMangaRequest>
 {
     public CreateMangaRequestValidator()
@@ -35,6 +36,7 @@ public class CreateMangaRequestValidator : AbstractValidator<CreateMangaRequest>
     }
 }
 
+/// <summary>Reglas de validación para la actualización de mangas.</summary>
 public class UpdateMangaRequestValidator : AbstractValidator<UpdateMangaRequest>
 {
     public UpdateMangaRequestValidator()

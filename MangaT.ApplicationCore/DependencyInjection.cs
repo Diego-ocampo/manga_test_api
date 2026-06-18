@@ -7,8 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace MangaT.ApplicationCore;
 
+/// <summary>
+/// Registro de servicios de la capa de aplicación en el contenedor DI.
+/// </summary>
 public static class DependencyInjection
 {
+    /// <summary>Registra servicios, validadores FluentValidation y casos de uso.</summary>
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddScoped<IMangaService, MangaService>();

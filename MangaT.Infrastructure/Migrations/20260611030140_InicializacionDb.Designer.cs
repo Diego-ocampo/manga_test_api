@@ -25,7 +25,7 @@ namespace MangaT.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("MangaT.ApplicationCore.Entities.Manga", b =>
+            modelBuilder.Entity("MangaT.Domain.Entities.Manga", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -77,6 +77,73 @@ namespace MangaT.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Mangas");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Author = "Eiichiro Oda",
+                            Category = "Adventure",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "A story about a group of pirates searching for the ultimate treasure.",
+                            DetailUrl = "https://example.com/onepiece",
+                            ImageUrl = "https://example.com/onepiece.jpg",
+                            Point = 9.5,
+                            Title = "One Piece",
+                            VolumeCount = 100
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Author = "Masashi Kishimoto",
+                            Category = "Action",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "A young ninja's journey to become the strongest in his village.",
+                            DetailUrl = "https://example.com/naruto",
+                            ImageUrl = "https://example.com/naruto.jpg",
+                            Point = 9.0,
+                            Title = "Naruto",
+                            VolumeCount = 72
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Author = "Tite Kubo",
+                            Category = "Fantasy",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "A teenager gains the powers of a Soul Reaper and battles evil spirits.",
+                            DetailUrl = "https://example.com/bleach",
+                            ImageUrl = "https://example.com/bleach.jpg",
+                            Point = 8.5,
+                            Title = "Bleach",
+                            VolumeCount = 74
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Author = "Hajime Isayama",
+                            Category = "Horror",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Humanity's fight for survival against giant humanoid creatures.",
+                            DetailUrl = "https://example.com/attackontitan",
+                            ImageUrl = "https://example.com/attackontitan.jpg",
+                            Point = 9.8000000000000007,
+                            Title = "Attack on Titan",
+                            VolumeCount = 34
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Author = "Kohei Horikoshi",
+                            Category = "Superhero",
+                            CreatedDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "In a world where superpowers are the norm, a boy without them strives to be a hero.",
+                            DetailUrl = "https://example.com/myheroacademia",
+                            ImageUrl = "https://example.com/myheroacademia.jpg",
+                            Point = 9.1999999999999993,
+                            Title = "My Hero Academia",
+                            VolumeCount = 30
+                        });
                 });
 #pragma warning restore 612, 618
         }

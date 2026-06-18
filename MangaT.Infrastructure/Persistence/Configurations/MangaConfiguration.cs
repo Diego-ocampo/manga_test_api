@@ -4,10 +4,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MangaT.Infrastructure.Persistence.Configurations;
 
+/// <summary>
+/// Mapeo de la entidad Manga a SQL Server: columnas, restricciones y datos semilla.
+/// </summary>
 public class MangaConfiguration : IEntityTypeConfiguration<Manga>
 {
+    // Fecha fija para datos semilla (HasData requiere valores constantes en migraciones).
     private static readonly DateTime SeedDate = new(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
+    /// <inheritdoc />
     public void Configure(EntityTypeBuilder<Manga> builder)
     {
         builder.HasKey(m => m.Id);
@@ -35,6 +40,7 @@ public class MangaConfiguration : IEntityTypeConfiguration<Manga>
         builder.Property(m => m.CreatedDate)
                .HasDefaultValueSql("GETUTCDATE()");
 
+        // Catálogo inicial de mangas insertado por migración.
         builder.HasData(
             new
             {

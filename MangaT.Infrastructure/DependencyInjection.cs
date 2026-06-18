@@ -6,8 +6,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace MangaT.Infrastructure;
 
+/// <summary>
+/// Registro de servicios de infraestructura: EF Core, SQL Server y repositorios.
+/// </summary>
 public static class DependencyInjection
 {
+    /// <summary>Configura DbContext con SQL Server y el repositorio de mangas.</summary>
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
         string connectionString)

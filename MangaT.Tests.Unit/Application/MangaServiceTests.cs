@@ -10,6 +10,9 @@ using Moq;
 
 namespace MangaT.Tests.Unit.Application;
 
+/// <summary>
+/// Pruebas unitarias de <see cref="MangaService"/> con repositorio y validadores simulados (Moq).
+/// </summary>
 public class MangaServiceTests
 {
     private readonly Mock<IMangaRepository> _repository = new();
@@ -18,6 +21,7 @@ public class MangaServiceTests
 
     public MangaServiceTests()
     {
+        // Por defecto las validaciones pasan; cada test puede sobrescribir el comportamiento.
         _createValidator
             .Setup(v => v.ValidateAsync(It.IsAny<CreateMangaRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());

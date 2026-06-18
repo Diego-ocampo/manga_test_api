@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace MangaT.Tests.Integration;
 
+/// <summary>
+/// Pruebas de integración HTTP contra la API completa con base de datos en memoria.
+/// </summary>
 public class MangaEndpointsTests : IClassFixture<CustomWebApplicationFactory>
 {
     private readonly HttpClient _client;
@@ -80,6 +83,7 @@ public class MangaEndpointsTests : IClassFixture<CustomWebApplicationFactory>
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
     }
 
+    /// <summary>Obtiene un JWT válido del endpoint de login demo.</summary>
     private async Task<string> LoginAsync(string username, string password)
     {
         var response = await _client.PostAsJsonAsync("/api/v1/auth/login", new LoginRequest
@@ -94,6 +98,7 @@ public class MangaEndpointsTests : IClassFixture<CustomWebApplicationFactory>
     }
 }
 
+/// <summary>Fábrica de la aplicación en entorno Testing (InMemory DB, sin migraciones SQL).</summary>
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(Microsoft.AspNetCore.Hosting.IWebHostBuilder builder)

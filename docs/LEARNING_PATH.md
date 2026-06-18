@@ -52,7 +52,7 @@ Este proyecto está diseñado para estudiar backend de forma progresiva.
 ## Fase 6 — Próximos pasos (por implementar)
 
 - [ ] CQRS con MediatR (`GetPopularMangaQuery`, `CreateMangaCommand`)
-- [ ] Docker Compose
+- [x] Docker Compose (API + SQL Server) — ver [MANUAL-DOCKER.md](MANUAL-DOCKER.md)
 - [ ] GitHub Actions (build + test)
 - [ ] User Secrets para JWT y connection string
 - [ ] Specification pattern para consultas reutilizables

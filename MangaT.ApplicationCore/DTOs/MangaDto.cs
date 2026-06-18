@@ -1,5 +1,6 @@
 namespace MangaT.ApplicationCore.DTOs;
 
+/// <summary>Representación pública de un manga devuelta por la API.</summary>
 public class MangaDto
 {
     public int Id { get; set; }
@@ -12,5 +13,7 @@ public class MangaDto
     public required string ImageUrl { get; set; }
     public required string DetailUrl { get; set; }
     public DateTime CreatedDate { get; set; }
+
+    /// <summary>Campo calculado útil para listados y documentación OpenAPI.</summary>
     public string TitleWithAuthor => $"{Title} by {Author}";
 }

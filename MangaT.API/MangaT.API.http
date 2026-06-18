@@ -1,4 +1,6 @@
-@MangaT_HostAddress = http://localhost:5292
+# Docker:  http://localhost:8080
+# Local:   http://localhost:5292
+@MangaT_HostAddress = http://localhost:8080
 
 ### Login como Admin
 POST {{MangaT_HostAddress}}/api/v1/auth/login

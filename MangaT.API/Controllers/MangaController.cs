@@ -5,10 +5,14 @@ using MangaT.ApplicationCore.Interfaces;
 
 namespace MangaT.API.Controllers;
 
+/// <summary>
+/// Endpoints CRUD de mangas. Lectura pública; escritura restringida al rol Admin.
+/// </summary>
 [ApiController]
 [Route("api/v1/manga")]
 public class MangaController(IMangaService mangaService) : ControllerBase
 {
+    /// <summary>Lista mangas paginados ordenados alfabéticamente por título.</summary>
     [HttpGet]
     [AllowAnonymous]
     public async Task<IActionResult> GetAll(
@@ -20,6 +24,7 @@ public class MangaController(IMangaService mangaService) : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>Lista mangas paginados ordenados por calificación (mayor a menor).</summary>
     [HttpGet("popular")]
     [AllowAnonymous]
     public async Task<IActionResult> GetPopular(
@@ -31,6 +36,7 @@ public class MangaController(IMangaService mangaService) : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>Obtiene un manga por su identificador numérico.</summary>
     [HttpGet("{id:int}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
@@ -39,6 +45,7 @@ public class MangaController(IMangaService mangaService) : ControllerBase
         return Ok(manga);
     }
 
+    /// <summary>Crea un nuevo manga. Requiere JWT con rol Admin.</summary>
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create([FromBody] CreateMangaRequest request, CancellationToken cancellationToken)
@@ -47,6 +54,7 @@ public class MangaController(IMangaService mangaService) : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = manga.Id }, manga);
     }
 
+    /// <summary>Actualiza un manga existente. Requiere JWT con rol Admin.</summary>
     [HttpPut("{id:int}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateMangaRequest request, CancellationToken cancellationToken)
@@ -55,6 +63,7 @@ public class MangaController(IMangaService mangaService) : ControllerBase
         return Ok(manga);
     }
 
+    /// <summary>Elimina un manga por id. Requiere JWT con rol Admin.</summary>
     [HttpDelete("{id:int}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)

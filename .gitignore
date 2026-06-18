@@ -44,7 +44,9 @@ coverage/
 *.sqlite
 *.db
 
-# Secrets
+.env
+.env.*
+!.env.example
 secrets.json
 secrets.*.json
 *.usersecrets

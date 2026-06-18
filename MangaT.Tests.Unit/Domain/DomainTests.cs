@@ -5,6 +5,7 @@ using MangaT.Domain.ValueObjects;
 
 namespace MangaT.Tests.Unit.Domain;
 
+/// <summary>Verifica las reglas del value object Rating (rango 0–10).</summary>
 public class RatingTests
 {
     [Theory]
@@ -26,6 +27,7 @@ public class RatingTests
     }
 }
 
+/// <summary>Verifica invariantes y métodos de la entidad de dominio Manga.</summary>
 public class MangaDomainTests
 {
     [Fact]

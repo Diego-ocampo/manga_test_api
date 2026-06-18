@@ -3,8 +3,12 @@ using MangaT.Domain.Entities;
 
 namespace MangaT.ApplicationCore.Mapping;
 
+/// <summary>
+/// Extensiones para convertir entidades de dominio en DTOs de respuesta.
+/// </summary>
 public static class MangaMapper
 {
+    /// <summary>Mapea una entidad <see cref="Manga"/> a su representación pública.</summary>
     public static MangaDto ToDto(this Manga manga) => new()
     {
         Id = manga.Id,

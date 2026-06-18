@@ -22,7 +22,7 @@ namespace MangaT.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("MangaT.ApplicationCore.Entities.Manga", b =>
+            modelBuilder.Entity("MangaT.Domain.Entities.Manga", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

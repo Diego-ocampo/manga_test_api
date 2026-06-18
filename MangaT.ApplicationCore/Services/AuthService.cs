@@ -8,10 +8,15 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace MangaT.ApplicationCore.Services;
 
+/// <summary>
+/// Autenticación demo: valida usuarios en configuración y emite tokens JWT firmados.
+/// </summary>
 public class AuthService(IConfiguration configuration) : IAuthService
 {
+    /// <inheritdoc />
     public Task<LoginResponse?> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)
     {
+        // Usuarios de demostración definidos en appsettings (DemoUsers).
         var users = configuration.GetSection("DemoUsers").Get<List<DemoUser>>() ?? [];
         var user = users.FirstOrDefault(u =>
             string.Equals(u.Username, request.Username, StringComparison.OrdinalIgnoreCase) &&
@@ -55,6 +60,7 @@ public class AuthService(IConfiguration configuration) : IAuthService
         });
     }
 
+    /// <summary>Modelo interno para deserializar DemoUsers desde configuración.</summary>
     private sealed class DemoUser
     {
         public string Username { get; set; } = string.Empty;

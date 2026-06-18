@@ -1,5 +1,6 @@
 namespace MangaT.ApplicationCore.DTOs;
 
+/// <summary>Payload para actualizar un manga (PUT /api/v1/manga/{id}).</summary>
 public class UpdateMangaRequest
 {
     public required string Title { get; set; }

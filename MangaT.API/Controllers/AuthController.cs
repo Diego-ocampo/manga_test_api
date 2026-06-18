@@ -5,10 +5,16 @@ using MangaT.ApplicationCore.Interfaces;
 
 namespace MangaT.API.Controllers;
 
+/// <summary>
+/// Autenticación demo mediante JWT. Los usuarios se definen en configuración (DemoUsers).
+/// </summary>
 [ApiController]
 [Route("api/v1/auth")]
 public class AuthController(IAuthService authService) : ControllerBase
 {
+    /// <summary>
+    /// Valida credenciales y devuelve un token JWT con nombre de usuario y rol.
+    /// </summary>
     [HttpPost("login")]
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken cancellationToken)
