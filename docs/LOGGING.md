@@ -33,7 +33,7 @@ ASP.NET Core incluye abstracciones de logging (`ILogger<T>`), pero **Serilog** e
    (4xx Warning, 5xx Error) (auditoría CRUD) (login ok/fallo)
                           │
                           ▼
-              Consola + logs/mangat-YYYYMMDD.log
+              Consola + ../logs/mangat-YYYYMMDD.log (raíz del repo, fuera de MangaT.API)
 ```
 
 ### Archivos clave
@@ -60,7 +60,7 @@ ASP.NET Core incluye abstracciones de logging (`ILogger<T>`), pero **Serilog** e
   },
   "WriteTo": [
     { "Name": "Console", "Args": { ... } },
-    { "Name": "File", "Args": { "path": "logs/mangat-.log", "rollingInterval": "Day" } }
+    { "Name": "File", "Args": { "path": "../logs/mangat-.log", "rollingInterval": "Day" } }
   ]
 }
 ```
@@ -110,7 +110,9 @@ Si un usuario reporta un error, busca ese `TraceId` en los logs.
 
 ## Docker
 
-Los logs de archivo se guardan en `/app/logs` dentro del contenedor. Docker Compose monta un volumen persistente:
+Los logs de archivo se guardan en **`../logs/`** (raíz del repositorio) al ejecutar en local con `dotnet run`. Así la carpeta no aparece dentro del proyecto en Visual Studio. `.gitignore` ya excluye `logs/`.
+
+En Docker el working directory es `/app`; `docker-compose.yml` sobreescribe la ruta a `logs/mangat-.log` y monta el volumen:
 
 ```yaml
 volumes:
@@ -142,7 +144,7 @@ Serilog__MinimumLevel__Override__MangaT=Debug
 2. **Prueba un 404:** `GET /api/v1/manga/9999` → busca Warning con `NOT_FOUND` y el `TraceId`.
 3. **Prueba login:** POST `/api/v1/auth/login` con credenciales incorrectas → Warning sin contraseña.
 4. **Crea un manga** (con token admin) → Information con `{MangaId}`.
-5. **Abre `logs/mangat-*.log`** y compara con la consola.
+5. **Abre `../logs/mangat-*.log`** (raíz del repo) y compara con la consola.
 6. **Cambia el nivel** en `appsettings.Development.json` a `"MangaT": "Debug"` y reinicia.
 
 ---
